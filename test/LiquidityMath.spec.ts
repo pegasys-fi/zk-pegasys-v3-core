@@ -1,18 +1,16 @@
 import { expect } from './shared/expect'
 import { LiquidityMathTest } from '../typechain/LiquidityMathTest'
-import { ethers, waffle } from 'hardhat'
+import { ethers } from 'hardhat'
 import snapshotGasCost from './shared/snapshotGasCost'
+import { deployContract } from './shared/zkSyncUtils'
 
 const { BigNumber } = ethers
 
 describe('LiquidityMath', () => {
   let liquidityMath: LiquidityMathTest
-  const fixture = async () => {
-    const factory = await ethers.getContractFactory('LiquidityMathTest')
-    return (await factory.deploy()) as LiquidityMathTest
-  }
+
   beforeEach('deploy LiquidityMathTest', async () => {
-    liquidityMath = await waffle.loadFixture(fixture)
+    liquidityMath = await deployContract('LiquidityMathTest') as LiquidityMathTest
   })
 
   describe('#addDelta', () => {

@@ -1,5 +1,5 @@
 import { BigNumber, BigNumberish } from 'ethers'
-import { ethers, waffle } from 'hardhat'
+import { deployContract } from './shared/zkSyncUtils'
 import { OracleTest } from '../typechain/OracleTest'
 import checkObservationEquals from './shared/checkObservationEquals'
 import { expect } from './shared/expect'
@@ -10,16 +10,8 @@ import { MaxUint128 } from './shared/utilities'
 const Q128 = BigNumber.from(2).pow(128)
 
 describe('Oracle', () => {
-  const [wallet, other] = waffle.provider.getWallets()
-
-  let loadFixture: ReturnType<typeof waffle.createFixtureLoader>
-  before('create fixture loader', async () => {
-    loadFixture = waffle.createFixtureLoader([wallet, other])
-  })
-
   const oracleFixture = async () => {
-    const oracleTestFactory = await ethers.getContractFactory('OracleTest')
-    return (await oracleTestFactory.deploy()) as OracleTest
+    return await deployContract('OracleTest') as OracleTest
   }
 
   const initializedOracleFixture = async () => {
@@ -35,22 +27,22 @@ describe('Oracle', () => {
   describe('#initialize', () => {
     let oracle: OracleTest
     beforeEach('deploy test oracle', async () => {
-      oracle = await loadFixture(oracleFixture)
+      oracle = await deployContract('OracleTest') as OracleTest
     })
     it('index is 0', async () => {
       await oracle.initialize({ liquidity: 1, tick: 1, time: 1 })
       expect(await oracle.index()).to.eq(0)
     })
     it('cardinality is 1', async () => {
-      await oracle.initialize({ liquidity: 1, tick: 1, time: 1 })
+      await (await oracle.initialize({ liquidity: 1, tick: 1, time: 1 })).wait()
       expect(await oracle.cardinality()).to.eq(1)
     })
     it('cardinality next is 1', async () => {
-      await oracle.initialize({ liquidity: 1, tick: 1, time: 1 })
+      await (await oracle.initialize({ liquidity: 1, tick: 1, time: 1 })).wait()
       expect(await oracle.cardinalityNext()).to.eq(1)
     })
     it('sets first slot timestamp only', async () => {
-      await oracle.initialize({ liquidity: 1, tick: 1, time: 1 })
+      await (await oracle.initialize({ liquidity: 1, tick: 1, time: 1 })).wait()
       checkObservationEquals(await oracle.observations(0), {
         initialized: true,
         blockTimestamp: 1,
@@ -66,18 +58,18 @@ describe('Oracle', () => {
   describe('#grow', () => {
     let oracle: OracleTest
     beforeEach('deploy initialized test oracle', async () => {
-      oracle = await loadFixture(initializedOracleFixture)
+      oracle = await initializedOracleFixture()
     })
 
     it('increases the cardinality next for the first call', async () => {
-      await oracle.grow(5)
+      await (await oracle.grow(5)).wait()
       expect(await oracle.index()).to.eq(0)
       expect(await oracle.cardinality()).to.eq(1)
       expect(await oracle.cardinalityNext()).to.eq(5)
     })
 
     it('does not touch the first slot', async () => {
-      await oracle.grow(5)
+      await (await oracle.grow(5)).wait()
       checkObservationEquals(await oracle.observations(0), {
         secondsPerLiquidityCumulativeX128: 0,
         tickCumulative: 0,
@@ -87,15 +79,15 @@ describe('Oracle', () => {
     })
 
     it('is no op if oracle is already gte that size', async () => {
-      await oracle.grow(5)
-      await oracle.grow(3)
+      await (await oracle.grow(5)).wait()
+      await (await oracle.grow(3)).wait()
       expect(await oracle.index()).to.eq(0)
       expect(await oracle.cardinality()).to.eq(1)
       expect(await oracle.cardinalityNext()).to.eq(5)
     })
 
     it('adds data to all the slots', async () => {
-      await oracle.grow(5)
+      await (await oracle.grow(5)).wait()
       for (let i = 1; i < 5; i++) {
         checkObservationEquals(await oracle.observations(i), {
           secondsPerLiquidityCumulativeX128: 0,
@@ -107,11 +99,11 @@ describe('Oracle', () => {
     })
 
     it('grow after wrap', async () => {
-      await oracle.grow(2)
-      await oracle.update({ advanceTimeBy: 2, liquidity: 1, tick: 1 }) // index is now 1
-      await oracle.update({ advanceTimeBy: 2, liquidity: 1, tick: 1 }) // index is now 0 again
+      await(await oracle.grow(2)).wait()
+      await(await oracle.update({ advanceTimeBy: 2, liquidity: 1, tick: 1 })).wait() // index is now 1
+      await(await oracle.update({ advanceTimeBy: 2, liquidity: 1, tick: 1 })).wait() // index is now 0 again
       expect(await oracle.index()).to.eq(0)
-      await oracle.grow(3)
+      await(await oracle.grow(3)).wait()
       expect(await oracle.index()).to.eq(0)
       expect(await oracle.cardinality()).to.eq(2)
       expect(await oracle.cardinalityNext()).to.eq(3)
@@ -126,12 +118,12 @@ describe('Oracle', () => {
     })
 
     it('gas for growing by 1 slot when index != cardinality - 1', async () => {
-      await oracle.grow(2)
+      await (await oracle.grow(2)).wait()
       await snapshotGasCost(oracle.grow(3))
     })
 
     it('gas for growing by 10 slots when index != cardinality - 1', async () => {
-      await oracle.grow(2)
+      await (await oracle.grow(2)).wait()
       await snapshotGasCost(oracle.grow(12))
     })
   })
@@ -140,7 +132,7 @@ describe('Oracle', () => {
     let oracle: OracleTest
 
     beforeEach('deploy initialized test oracle', async () => {
-      oracle = await loadFixture(initializedOracleFixture)
+      oracle = await initializedOracleFixture()
     })
 
     it('single element array gets overwritten', async () => {
@@ -266,7 +258,7 @@ describe('Oracle', () => {
     describe('before initialization', async () => {
       let oracle: OracleTest
       beforeEach('deploy test oracle', async () => {
-        oracle = await loadFixture(oracleFixture)
+        oracle = await oracleFixture()
       })
 
       const observeSingle = async (secondsAgo: number) => {
@@ -530,7 +522,7 @@ describe('Oracle', () => {
         }
         let oracle: OracleTest
         beforeEach('set up observations', async () => {
-          oracle = await loadFixture(oracleFixture5Observations)
+          oracle = await oracleFixture5Observations()
         })
 
         const observeSingle = async (secondsAgo: number) => {
@@ -671,7 +663,7 @@ describe('Oracle', () => {
     }
 
     beforeEach('create a full oracle', async () => {
-      oracle = await loadFixture(maxedOutOracleFixture)
+      oracle = await maxedOutOracleFixture()
     })
 
     it('has max cardinality next', async () => {
