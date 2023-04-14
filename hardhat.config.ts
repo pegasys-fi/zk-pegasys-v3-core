@@ -12,10 +12,10 @@ export default {
     settings: {},
   },
   defaultNetwork: "zkSyncTestnet",
-
   networks: {
     hardhat: {
       allowUnlimitedContractSize: false,
+      zksync: true,
     },
     mainnet: {
       url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
@@ -32,11 +32,16 @@ export default {
     kovan: {
       url: `https://kovan.infura.io/v3/${process.env.INFURA_API_KEY}`,
     },
-    zkSyncTestnet: {
-      url: "https://testnet.era.zksync.dev",
-      ethNetwork: "goerli", // RPC URL of the network (e.g. `https://goerli.infura.io/v3/<API_KEY>`)
+    zkSyncLocalhost: {
+      url: "http://localhost:3050",
+      ethNetwork: "http://localhost:8545",
       zksync: true,
     },
+    zkSyncTestnet: {
+      url: "https://testnet.era.zksync.dev",
+      ethNetwork: `https://goerli.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      zksync: true,
+    }
   },
   etherscan: {
     // Your API key for Etherscan

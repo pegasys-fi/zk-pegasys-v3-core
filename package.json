@@ -41,7 +41,7 @@
     "chai": "^4.2.0",
     "decimal.js": "^10.2.1",
     "ethereum-waffle": "^3.0.2",
-    "ethers": "^5.0.8",
+    "ethers": "^5.5.4",
     "hardhat": "^2.2.0",
     "hardhat-typechain": "^0.3.5",
     "mocha": "^6.2.2",
@@ -57,6 +57,7 @@
   },
   "scripts": {
     "compile": "hardhat compile",
-    "test": "hardhat test"
+    "test": "hardhat test --network zkSyncLocalhost",
+    "local-setup": "./scripts/start-local-setup.sh"
   }
 }
