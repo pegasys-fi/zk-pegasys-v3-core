@@ -22,7 +22,11 @@
     "artifacts/contracts/UniswapV3Factory.sol/UniswapV3Factory.json",
     "artifacts/contracts/UniswapV3Pool.sol/UniswapV3Pool.json",
     "artifacts/contracts/interfaces/**/*.json",
-    "!artifacts/contracts/interfaces/**/*.dbg.json"
+    "!artifacts/contracts/interfaces/**/*.dbg.json",
+    "artifacts-zk/contracts/UniswapV3Factory.sol/UniswapV3Factory.json",
+    "artifacts-zk/contracts/UniswapV3Pool.sol/UniswapV3Pool.json",
+    "artifacts-zk/contracts/interfaces/**/*.json",
+    "!artifacts-zk/contracts/interfaces/**/*.dbg.json"
   ],
   "engines": {
     "node": ">=10"
