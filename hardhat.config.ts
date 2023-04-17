@@ -40,7 +40,7 @@ export default {
     settings: {
       optimizer: {
         enabled: true,
-          // will be ignored by zksolc
+        // will be ignored by zksolc
         runs: 800,
       },
       metadata: {
