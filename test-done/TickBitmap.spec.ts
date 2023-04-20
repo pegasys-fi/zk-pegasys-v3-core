@@ -1,19 +1,18 @@
-import { ethers } from 'hardhat'
 import { TickBitmapTest } from '../typechain/TickBitmapTest'
 import { expect } from './shared/expect'
 import snapshotGasCost from './shared/snapshotGasCost'
+import { deployContract } from './shared/zkSyncUtils'
 
 describe('TickBitmap', () => {
   let tickBitmap: TickBitmapTest
 
   beforeEach('deploy TickBitmapTest', async () => {
-    const tickBitmapTestFactory = await ethers.getContractFactory('TickBitmapTest')
-    tickBitmap = (await tickBitmapTestFactory.deploy()) as TickBitmapTest
+    tickBitmap = await deployContract('TickBitmapTest') as TickBitmapTest
   })
 
   async function initTicks(ticks: number[]): Promise<void> {
     for (const tick of ticks) {
-      await tickBitmap.flipTick(tick)
+      await (await tickBitmap.flipTick(tick)).wait()
     }
   }
 
@@ -22,20 +21,20 @@ describe('TickBitmap', () => {
       expect(await tickBitmap.isInitialized(1)).to.eq(false)
     })
     it('is flipped by #flipTick', async () => {
-      await tickBitmap.flipTick(1)
+      await (await tickBitmap.flipTick(1)).wait()
       expect(await tickBitmap.isInitialized(1)).to.eq(true)
     })
     it('is flipped back by #flipTick', async () => {
-      await tickBitmap.flipTick(1)
-      await tickBitmap.flipTick(1)
+      await (await tickBitmap.flipTick(1)).wait()
+      await (await tickBitmap.flipTick(1)).wait()
       expect(await tickBitmap.isInitialized(1)).to.eq(false)
     })
     it('is not changed by another flip to a different tick', async () => {
-      await tickBitmap.flipTick(2)
+      await (await tickBitmap.flipTick(2)).wait()
       expect(await tickBitmap.isInitialized(1)).to.eq(false)
     })
     it('is not changed by another flip to a different tick on another word', async () => {
-      await tickBitmap.flipTick(1 + 256)
+      await (await tickBitmap.flipTick(1 + 256)).wait()
       expect(await tickBitmap.isInitialized(257)).to.eq(true)
       expect(await tickBitmap.isInitialized(1)).to.eq(false)
     })
@@ -43,13 +42,13 @@ describe('TickBitmap', () => {
 
   describe('#flipTick', () => {
     it('flips only the specified tick', async () => {
-      await tickBitmap.flipTick(-230)
+      await (await tickBitmap.flipTick(-230)).wait()
       expect(await tickBitmap.isInitialized(-230)).to.eq(true)
       expect(await tickBitmap.isInitialized(-231)).to.eq(false)
       expect(await tickBitmap.isInitialized(-229)).to.eq(false)
       expect(await tickBitmap.isInitialized(-230 + 256)).to.eq(false)
       expect(await tickBitmap.isInitialized(-230 - 256)).to.eq(false)
-      await tickBitmap.flipTick(-230)
+      await (await tickBitmap.flipTick(-230)).wait()
       expect(await tickBitmap.isInitialized(-230)).to.eq(false)
       expect(await tickBitmap.isInitialized(-231)).to.eq(false)
       expect(await tickBitmap.isInitialized(-229)).to.eq(false)
@@ -58,13 +57,13 @@ describe('TickBitmap', () => {
     })
 
     it('reverts only itself', async () => {
-      await tickBitmap.flipTick(-230)
-      await tickBitmap.flipTick(-259)
-      await tickBitmap.flipTick(-229)
-      await tickBitmap.flipTick(500)
-      await tickBitmap.flipTick(-259)
-      await tickBitmap.flipTick(-229)
-      await tickBitmap.flipTick(-259)
+      await (await tickBitmap.flipTick(-230)).wait()
+      await (await tickBitmap.flipTick(-259)).wait()
+      await (await tickBitmap.flipTick(-229)).wait()
+      await (await tickBitmap.flipTick(500)).wait()
+      await (await tickBitmap.flipTick(-259)).wait()
+      await (await tickBitmap.flipTick(-229)).wait()
+      await (await tickBitmap.flipTick(-259)).wait()
 
       expect(await tickBitmap.isInitialized(-259)).to.eq(true)
       expect(await tickBitmap.isInitialized(-229)).to.eq(false)
@@ -74,11 +73,11 @@ describe('TickBitmap', () => {
       await snapshotGasCost(await tickBitmap.getGasCostOfFlipTick(1))
     })
     it('gas cost of flipping second tick in word to initialized', async () => {
-      await tickBitmap.flipTick(0)
+      await (await tickBitmap.flipTick(0)).wait()
       await snapshotGasCost(await tickBitmap.getGasCostOfFlipTick(1))
     })
     it('gas cost of flipping a tick that results in deleting a word', async () => {
-      await tickBitmap.flipTick(0)
+      await (await tickBitmap.flipTick(0)).wait()
       await snapshotGasCost(await tickBitmap.getGasCostOfFlipTick(0))
     })
   })
@@ -124,7 +123,7 @@ describe('TickBitmap', () => {
       })
 
       it('returns the next initialized tick from the next word', async () => {
-        await tickBitmap.flipTick(340)
+        await (await tickBitmap.flipTick(340)).wait()
         const { next, initialized } = await tickBitmap.nextInitializedTickWithinOneWord(328, false)
         expect(next).to.eq(340)
         expect(initialized).to.eq(true)
@@ -206,7 +205,7 @@ describe('TickBitmap', () => {
         expect(initialized).to.eq(false)
       })
       it('boundary is initialized', async () => {
-        await tickBitmap.flipTick(329)
+        await (await tickBitmap.flipTick(329)).wait()
         const { next, initialized } = await tickBitmap.nextInitializedTickWithinOneWord(456, true)
 
         expect(next).to.eq(329)

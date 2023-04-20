@@ -5,8 +5,9 @@ import { MockTimeUniswapV3Pool } from '../typechain/MockTimeUniswapV3Pool'
 import { TickMathTest } from '../typechain/TickMathTest'
 import { UniswapV3PoolSwapTest } from '../typechain/UniswapV3PoolSwapTest'
 import { expect } from './shared/expect'
+import { deployContract, getWallets, getCreate2Address, loadArtifact } from './shared/zkSyncUtils'
 
-import { poolFixture } from './shared/fixtures'
+import { poolFixture } from './shared/zkSyncFixtures'
 import { formatPrice, formatTokenAmount } from './shared/format'
 
 import {
@@ -29,8 +30,6 @@ const {
   constants: { MaxUint256 },
 } = ethers
 
-const createFixtureLoader = waffle.createFixtureLoader
-
 Decimal.config({ toExpNeg: -500, toExpPos: 500 })
 
 function applySqrtRatioBipsHundredthsDelta(sqrtRatio: BigNumber, bipsHundredths: number): BigNumber {
@@ -49,13 +48,7 @@ function applySqrtRatioBipsHundredthsDelta(sqrtRatio: BigNumber, bipsHundredths:
 }
 
 describe('UniswapV3Pool arbitrage tests', () => {
-  const [wallet, arbitrageur] = waffle.provider.getWallets()
-
-  let loadFixture: ReturnType<typeof createFixtureLoader>
-
-  before('create fixture loader', async () => {
-    loadFixture = createFixtureLoader([wallet, arbitrageur])
-  })
+  const [wallet, arbitrageur] = getWallets()
 
   for (const feeProtocol of [0, 6]) {
     describe(`protocol fee = ${feeProtocol};`, () => {

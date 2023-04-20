@@ -1,7 +1,7 @@
 import { BigNumber } from 'ethers'
-import { ethers } from 'hardhat'
 import { SwapMathTest } from '../typechain/SwapMathTest'
 
+import { deployContract } from './shared/zkSyncUtils'
 import { expect } from './shared/expect'
 import snapshotGasCost from './shared/snapshotGasCost'
 import { encodePriceSqrt, expandTo18Decimals } from './shared/utilities'
@@ -11,10 +11,8 @@ describe('SwapMath', () => {
   let swapMath: SwapMathTest
   let sqrtPriceMath: SqrtPriceMathTest
   before(async () => {
-    const swapMathTestFactory = await ethers.getContractFactory('SwapMathTest')
-    const sqrtPriceMathTestFactory = await ethers.getContractFactory('SqrtPriceMathTest')
-    swapMath = (await swapMathTestFactory.deploy()) as SwapMathTest
-    sqrtPriceMath = (await sqrtPriceMathTestFactory.deploy()) as SqrtPriceMathTest
+    swapMath = await deployContract('SwapMathTest') as SwapMathTest
+    sqrtPriceMath = await deployContract('SqrtPriceMathTest') as SqrtPriceMathTest
   })
 
   describe('#computeSwapStep', () => {
