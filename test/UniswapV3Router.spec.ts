@@ -3,8 +3,9 @@ import { TestERC20 } from '../typechain/TestERC20'
 import { UniswapV3Factory } from '../typechain/UniswapV3Factory'
 import { MockTimeUniswapV3Pool } from '../typechain/MockTimeUniswapV3Pool'
 import { expect } from './shared/expect'
+import { getWallets } from './shared/zkSyncUtils'
 
-import { poolFixture } from './shared/fixtures'
+import { poolFixture } from './shared/zkSyncFixtures'
 
 import {
   FeeAmount,
@@ -28,7 +29,7 @@ const createFixtureLoader = waffle.createFixtureLoader
 type ThenArg<T> = T extends PromiseLike<infer U> ? U : T
 
 describe('UniswapV3Pool', () => {
-  const [wallet, other] = waffle.provider.getWallets()
+  const [wallet, other] = getWallets()
 
   let token0: TestERC20
   let token1: TestERC20
@@ -46,17 +47,12 @@ describe('UniswapV3Pool', () => {
   let swapTargetCallee: TestUniswapV3Callee
   let swapTargetRouter: TestUniswapV3Router
 
-  let loadFixture: ReturnType<typeof createFixtureLoader>
   let createPool: ThenArg<ReturnType<typeof poolFixture>>['createPool']
 
-  before('create fixture loader', async () => {
-    loadFixture = createFixtureLoader([wallet, other])
-  })
-
   beforeEach('deploy first fixture', async () => {
-    ;({ token0, token1, token2, factory, createPool, swapTargetCallee, swapTargetRouter } = await loadFixture(
-      poolFixture
-    ))
+    ;({ token0, token1, token2, factory, createPool, swapTargetCallee, swapTargetRouter } = await 
+      poolFixture()
+    )
 
     const createPoolWrapped = async (
       amount: number,
@@ -98,11 +94,11 @@ describe('UniswapV3Pool', () => {
       inputToken = token0
       outputToken = token2
 
-      await pool0.initialize(encodePriceSqrt(1, 1))
-      await pool1.initialize(encodePriceSqrt(1, 1))
+      await (await pool0.initialize(encodePriceSqrt(1, 1))).wait()
+      await (await pool1.initialize(encodePriceSqrt(1, 1))).wait()
 
-      await pool0Functions.mint(wallet.address, minTick, maxTick, expandTo18Decimals(1))
-      await pool1Functions.mint(wallet.address, minTick, maxTick, expandTo18Decimals(1))
+      await (await pool0Functions.mint(wallet.address, minTick, maxTick, expandTo18Decimals(1))).wait()
+      await (await pool1Functions.mint(wallet.address, minTick, maxTick, expandTo18Decimals(1))).wait()
     })
 
     it('multi-swap', async () => {

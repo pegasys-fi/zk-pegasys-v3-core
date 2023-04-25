@@ -4,6 +4,7 @@ import '@nomiclabs/hardhat-waffle'
 import '@nomiclabs/hardhat-etherscan'
 import "@matterlabs/hardhat-zksync-deploy";
 import "@matterlabs/hardhat-zksync-solc";
+import "@matterlabs/hardhat-zksync-chai-matchers";
 
 export default {
   zksolc: {
