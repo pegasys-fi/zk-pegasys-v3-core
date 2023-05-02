@@ -3,9 +3,9 @@ import { ethers } from 'hardhat'
 import { SqrtPriceMathTest } from '../typechain/SqrtPriceMathTest'
 import { deployContract } from './shared/zkSyncUtils'
 
-import { expect } from '../test/shared/expect'
-import snapshotGasCost from '../test/shared/snapshotGasCost'
-import { encodePriceSqrt, expandTo18Decimals, MaxUint128 } from '../test/shared/utilities'
+import { expect } from './shared/expect'
+import snapshotGasCost from './shared/snapshotGasCost'
+import { encodePriceSqrt, expandTo18Decimals, MaxUint128 } from './shared/utilities'
 
 const {
   constants: { MaxUint256 },

@@ -8,7 +8,7 @@ import "@matterlabs/hardhat-zksync-chai-matchers";
 
 export default {
   zksolc: {
-    version: "1.3.8",
+    version: "1.3.10",
     compilerSource: "binary",
     settings: {},
   },

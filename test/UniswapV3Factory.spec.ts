@@ -97,7 +97,7 @@ describe('UniswapV3Factory', () => {
     it('fails if token a is 0 or token b is 0', async () => {
       await expect(factory.createPool(TEST_ADDRESSES[0], constants.AddressZero, FeeAmount.LOW)).to.be.reverted
       await expect(factory.createPool(constants.AddressZero, TEST_ADDRESSES[0], FeeAmount.LOW)).to.be.reverted
-      await expect(factory.createPool(constants.AddressZero, constants.AddressZero, FeeAmount.LOW, {gasLimit: "100000"})).to.be.revertedWith(
+      await expect(factory.createPool(constants.AddressZero, constants.AddressZero, FeeAmount.LOW)).to.be.revertedWith(
         ''
       )
     })
@@ -135,7 +135,7 @@ describe('UniswapV3Factory', () => {
 
   describe('#enableFeeAmount', () => {
     it('fails if caller is not owner', async () => {
-      await expect(factory.connect(other.privateKey).enableFeeAmount(100, 2)).to.be.reverted
+      await expect(factory.connect(other as any).enableFeeAmount(100, 2)).to.be.reverted
     })
     it('fails if fee is too great', async () => {
       await expect(factory.enableFeeAmount(1000000, 10)).to.be.reverted
