@@ -31,7 +31,11 @@
   "engines": {
     "node": ">=10"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@matterlabs/hardhat-zksync-chai-matchers": "^0.1.2",
+    "@matterlabs/hardhat-zksync-deploy": "^0.6.3",
+    "@nomicfoundation/hardhat-chai-matchers": "^1.0.6"
+  },
   "devDependencies": {
     "@matterlabs/hardhat-zksync-solc": "^0.3.16",
     "@matterlabs/hardhat-zksync-verify": "^0.1.5",
@@ -44,8 +48,8 @@
     "chai": "^4.2.0",
     "decimal.js": "^10.2.1",
     "ethereum-waffle": "^3.0.2",
-    "ethers": "^5.0.8",
-    "hardhat": "^2.2.0",
+    "ethers": "^5.7.0",
+    "hardhat": "^2.14.0",
     "hardhat-typechain": "^0.3.5",
     "mocha": "^6.2.2",
     "mocha-chai-jest-snapshot": "^1.1.0",
@@ -61,6 +65,7 @@
   },
   "scripts": {
     "compile": "hardhat compile",
-    "test": "hardhat test"
+    "test": "hardhat test --network zkSyncLocalhost",
+    "local-setup": "./scripts/start-local-setup.sh"
   }
 }

@@ -2,13 +2,16 @@ import 'hardhat-typechain'
 import '@nomiclabs/hardhat-ethers'
 import '@nomiclabs/hardhat-waffle'
 import '@nomiclabs/hardhat-etherscan'
-import '@matterlabs/hardhat-zksync-solc'
-import '@matterlabs/hardhat-zksync-verify'
+import "@matterlabs/hardhat-zksync-deploy";
+import "@matterlabs/hardhat-zksync-solc";
+import "@matterlabs/hardhat-zksync-chai-matchers";
 
 export default {
+  defaultNetwork: "zkSyncTestnet",
   networks: {
     hardhat: {
       allowUnlimitedContractSize: false,
+      zksync: true,
     },
     mainnet: {
       url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
@@ -24,6 +27,11 @@ export default {
     },
     kovan: {
       url: `https://kovan.infura.io/v3/${process.env.INFURA_API_KEY}`,
+    },
+    zkSyncLocalhost: {
+      url: "http://localhost:3050",
+      ethNetwork: "http://localhost:8545",
+      zksync: true,
     },
     zkSyncTestnet: {
       url: "https://testnet.era.zksync.dev",
@@ -51,6 +59,9 @@ export default {
         bytecodeHash: 'none',
       },
     },
+  },
+  mocha: {
+    timeout: 100000000
   },
   zksolc: {
     version: "1.3.10",

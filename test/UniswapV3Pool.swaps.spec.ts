@@ -1,12 +1,13 @@
 import { Decimal } from 'decimal.js'
 import { BigNumber, BigNumberish, ContractTransaction } from 'ethers'
-import { ethers, waffle } from 'hardhat'
+import { ethers } from 'hardhat'
 import { MockTimeUniswapV3Pool } from '../typechain/MockTimeUniswapV3Pool'
 import { TestERC20 } from '../typechain/TestERC20'
 
+import { getWallets } from './shared/zkSyncUtils'
 import { TestUniswapV3Callee } from '../typechain/TestUniswapV3Callee'
 import { expect } from './shared/expect'
-import { poolFixture } from './shared/fixtures'
+import { poolFixture } from './shared/zkSyncFixtures'
 import { formatPrice, formatTokenAmount } from './shared/format'
 import {
   createPoolFunctions,
@@ -24,7 +25,6 @@ import {
 
 Decimal.config({ toExpNeg: -500, toExpPos: 500 })
 
-const createFixtureLoader = waffle.createFixtureLoader
 const { constants } = ethers
 
 interface BaseSwapTestCase {
@@ -448,27 +448,18 @@ const TEST_POOLS: PoolTestCase[] = [
 ]
 
 describe('UniswapV3Pool swap tests', () => {
-  const [wallet] = waffle.provider.getWallets()
-
-  let loadFixture: ReturnType<typeof createFixtureLoader>
-
-  before('create fixture loader', async () => {
-    loadFixture = createFixtureLoader([wallet])
-  })
+  const [wallet] = getWallets()
 
   for (const poolCase of TEST_POOLS) {
     describe(poolCase.description, () => {
       const poolCaseFixture = async () => {
-        const { createPool, token0, token1, swapTargetCallee: swapTarget } = await poolFixture(
-          [wallet],
-          waffle.provider
-        )
+        const { createPool, token0, token1, swapTargetCallee: swapTarget } = await poolFixture()
         const pool = await createPool(poolCase.feeAmount, poolCase.tickSpacing)
         const poolFunctions = createPoolFunctions({ swapTarget, token0, token1, pool })
-        await pool.initialize(poolCase.startingPrice)
+        await (await pool.initialize(poolCase.startingPrice)).wait()
         // mint all positions
         for (const position of poolCase.positions) {
-          await poolFunctions.mint(wallet.address, position.tickLower, position.tickUpper, position.liquidity)
+          await (await poolFunctions.mint(wallet.address, position.tickLower, position.tickUpper, position.liquidity)).wait()
         }
 
         const [poolBalance0, poolBalance1] = await Promise.all([
@@ -490,15 +481,15 @@ describe('UniswapV3Pool swap tests', () => {
       let poolFunctions: PoolFunctions
 
       beforeEach('load fixture', async () => {
-        ;({ token0, token1, pool, poolFunctions, poolBalance0, poolBalance1, swapTarget } = await loadFixture(
-          poolCaseFixture
-        ))
+        ;({ token0, token1, pool, poolFunctions, poolBalance0, poolBalance1, swapTarget } = await 
+          poolCaseFixture()
+        )
       })
 
       afterEach('check can burn positions', async () => {
         for (const { liquidity, tickUpper, tickLower } of poolCase.positions) {
-          await pool.burn(tickLower, tickUpper, liquidity)
-          await pool.collect(POSITION_PROCEEDS_OUTPUT_ADDRESS, tickLower, tickUpper, MaxUint128, MaxUint128)
+          await (await pool.burn(tickLower, tickUpper, liquidity)).wait()
+          await (await pool.collect(POSITION_PROCEEDS_OUTPUT_ADDRESS, tickLower, tickUpper, MaxUint128, MaxUint128)).wait()
         }
       })
 
@@ -507,10 +498,15 @@ describe('UniswapV3Pool swap tests', () => {
           const slot0 = await pool.slot0()
           const tx = executeSwap(pool, testCase, poolFunctions)
           try {
-            await tx
+            await (await tx).wait()
           } catch (error) {
+            // Convert zkSync server error message to the Hardhat format
+            const swapError = error.message
+              .match(/cannot estimate gas: [^\\]*/)
+              .toString()
+              .replace("cannot estimate gas:", "VM Exception while processing transaction: revert");
             expect({
-              swapError: error.message,
+              swapError,
               poolBalance0: poolBalance0.toString(),
               poolBalance1: poolBalance1.toString(),
               poolPriceBefore: formatPrice(slot0.sqrtPriceX96),

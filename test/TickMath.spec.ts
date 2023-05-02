@@ -3,6 +3,7 @@ import { ethers } from 'hardhat'
 import { TickMathTest } from '../typechain/TickMathTest'
 import { expect } from './shared/expect'
 import snapshotGasCost from './shared/snapshotGasCost'
+import { deployContract } from './shared/zkSyncUtils'
 import { encodePriceSqrt, MIN_SQRT_RATIO, MAX_SQRT_RATIO } from './shared/utilities'
 import Decimal from 'decimal.js'
 
@@ -15,8 +16,7 @@ describe('TickMath', () => {
   let tickMath: TickMathTest
 
   before('deploy TickMathTest', async () => {
-    const factory = await ethers.getContractFactory('TickMathTest')
-    tickMath = (await factory.deploy()) as TickMathTest
+    tickMath = await deployContract('TickMathTest') as TickMathTest
   })
 
   describe('#getSqrtRatioAtTick', () => {

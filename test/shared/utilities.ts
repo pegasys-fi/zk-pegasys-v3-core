@@ -58,7 +58,8 @@ export function getCreate2Address(
 }
 
 bn.config({ EXPONENTIAL_AT: 999999, DECIMAL_PLACES: 40 })
-
+48056750000000
+864154750000000
 // returns the sqrt price as a 64x96
 export function encodePriceSqrt(reserve1: BigNumberish, reserve0: BigNumberish): BigNumber {
   return BigNumber.from(
@@ -161,27 +162,27 @@ export function createPoolFunctions({
   }
 
   const swapToLowerPrice: SwapToPriceFunction = (sqrtPriceX96, to) => {
-    return swapToSqrtPrice(token0, sqrtPriceX96, to)
+    return swapToSqrtPrice(token0 as Contract, sqrtPriceX96, to)
   }
 
   const swapToHigherPrice: SwapToPriceFunction = (sqrtPriceX96, to) => {
-    return swapToSqrtPrice(token1, sqrtPriceX96, to)
+    return swapToSqrtPrice(token1 as Contract, sqrtPriceX96, to)
   }
 
   const swapExact0For1: SwapFunction = (amount, to, sqrtPriceLimitX96) => {
-    return swap(token0, [amount, 0], to, sqrtPriceLimitX96)
+    return swap(token0 as Contract, [amount, 0], to, sqrtPriceLimitX96)
   }
 
   const swap0ForExact1: SwapFunction = (amount, to, sqrtPriceLimitX96) => {
-    return swap(token0, [0, amount], to, sqrtPriceLimitX96)
+    return swap(token0 as Contract, [0, amount], to, sqrtPriceLimitX96)
   }
 
   const swapExact1For0: SwapFunction = (amount, to, sqrtPriceLimitX96) => {
-    return swap(token1, [amount, 0], to, sqrtPriceLimitX96)
+    return swap(token1 as Contract, [amount, 0], to, sqrtPriceLimitX96)
   }
 
   const swap1ForExact0: SwapFunction = (amount, to, sqrtPriceLimitX96) => {
-    return swap(token1, [0, amount], to, sqrtPriceLimitX96)
+    return swap(token1 as Contract, [0, amount], to, sqrtPriceLimitX96)
   }
 
   const mint: MintFunction = async (recipient, tickLower, tickUpper, liquidity) => {
