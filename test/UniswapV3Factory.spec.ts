@@ -57,7 +57,7 @@ describe('UniswapV3Factory', () => {
     await expect(create)
       .to.emit(factory, 'PoolCreated')
       .withArgs(TEST_ADDRESSES[0], TEST_ADDRESSES[1], feeAmount, tickSpacing, create2Address)
-    
+
     await expect(factory.createPool(tokens[0], tokens[1], feeAmount)).to.be.reverted
     await expect(factory.createPool(tokens[1], tokens[0], feeAmount)).to.be.reverted
     expect(await factory.getPool(tokens[0], tokens[1], feeAmount), 'getPool in order').to.eq(create2Address)
@@ -71,7 +71,6 @@ describe('UniswapV3Factory', () => {
     expect(await pool.token1(), 'pool token1').to.eq(TEST_ADDRESSES[1])
     expect(await pool.fee(), 'pool fee').to.eq(feeAmount)
     expect(await pool.tickSpacing(), 'pool tick spacing').to.eq(tickSpacing)
-
   }
 
   describe('#createPool', () => {
@@ -113,7 +112,7 @@ describe('UniswapV3Factory', () => {
 
   describe('#setOwner', () => {
     it('fails if caller is not owner', async () => {
-      await expect(factory.connect(other.privateKey).setOwner(wallet.address)).to.be.reverted
+      await expect(factory.connect(other as any).setOwner(wallet.address)).to.be.reverted
     })
 
     it('updates owner', async () => {
