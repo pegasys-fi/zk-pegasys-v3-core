@@ -1,15 +1,17 @@
 import { BigNumber, BigNumberish } from 'ethers'
-import { deployContract } from './shared/zkSyncUtils'
 import { OracleTest } from '../typechain/OracleTest'
 import checkObservationEquals from './shared/checkObservationEquals'
 import { expect } from './shared/expect'
 import { TEST_POOL_START_TIME } from './shared/fixtures'
 import snapshotGasCost from './shared/snapshotGasCost'
 import { MaxUint128 } from './shared/utilities'
+import { deployContract, getWallets } from './shared/zkSyncUtils'
 
 const Q128 = BigNumber.from(2).pow(128)
 
 describe('Oracle', () => {
+  const [wallet, other] = getWallets()
+
   const oracleFixture = async () => {
     return await deployContract('OracleTest') as OracleTest
   }
@@ -27,7 +29,7 @@ describe('Oracle', () => {
   describe('#initialize', () => {
     let oracle: OracleTest
     beforeEach('deploy test oracle', async () => {
-      oracle = await deployContract('OracleTest') as OracleTest
+      oracle = await oracleFixture()
     })
     it('index is 0', async () => {
       await (await oracle.initialize({ liquidity: 1, tick: 1, time: 1 })).wait()

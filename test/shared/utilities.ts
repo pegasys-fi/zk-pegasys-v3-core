@@ -4,6 +4,7 @@ import { TestUniswapV3Callee } from '../../typechain/TestUniswapV3Callee'
 import { TestUniswapV3Router } from '../../typechain/TestUniswapV3Router'
 import { MockTimeUniswapV3Pool } from '../../typechain/MockTimeUniswapV3Pool'
 import { TestERC20 } from '../../typechain/TestERC20'
+import * as zk from 'zksync-web3'
 
 export const MaxUint128 = BigNumber.from(2).pow(128).sub(1)
 
@@ -45,21 +46,17 @@ export function getCreate2Address(
     ['address', 'address', 'uint24'],
     [token0, token1, fee]
   )
-  const create2Inputs = [
-    '0xff',
+
+  return zk.utils.create2Address(
     factoryAddress,
-    // salt
+    zk.utils.hashBytecode(bytecode),
     utils.keccak256(constructorArgumentsEncoded),
-    // init code. bytecode + constructor arguments
-    utils.keccak256(bytecode),
-  ]
-  const sanitizedInputs = `0x${create2Inputs.map((i) => i.slice(2)).join('')}`
-  return utils.getAddress(`0x${utils.keccak256(sanitizedInputs).slice(-40)}`)
+    '0x'
+  )
 }
 
 bn.config({ EXPONENTIAL_AT: 999999, DECIMAL_PLACES: 40 })
-48056750000000
-864154750000000
+
 // returns the sqrt price as a 64x96
 export function encodePriceSqrt(reserve1: BigNumberish, reserve0: BigNumberish): BigNumber {
   return BigNumber.from(
@@ -162,27 +159,27 @@ export function createPoolFunctions({
   }
 
   const swapToLowerPrice: SwapToPriceFunction = (sqrtPriceX96, to) => {
-    return swapToSqrtPrice(token0 as Contract, sqrtPriceX96, to)
+    return swapToSqrtPrice(token0, sqrtPriceX96, to)
   }
 
   const swapToHigherPrice: SwapToPriceFunction = (sqrtPriceX96, to) => {
-    return swapToSqrtPrice(token1 as Contract, sqrtPriceX96, to)
+    return swapToSqrtPrice(token1, sqrtPriceX96, to)
   }
 
   const swapExact0For1: SwapFunction = (amount, to, sqrtPriceLimitX96) => {
-    return swap(token0 as Contract, [amount, 0], to, sqrtPriceLimitX96)
+    return swap(token0, [amount, 0], to, sqrtPriceLimitX96)
   }
 
   const swap0ForExact1: SwapFunction = (amount, to, sqrtPriceLimitX96) => {
-    return swap(token0 as Contract, [0, amount], to, sqrtPriceLimitX96)
+    return swap(token0, [0, amount], to, sqrtPriceLimitX96)
   }
 
   const swapExact1For0: SwapFunction = (amount, to, sqrtPriceLimitX96) => {
-    return swap(token1 as Contract, [amount, 0], to, sqrtPriceLimitX96)
+    return swap(token1, [amount, 0], to, sqrtPriceLimitX96)
   }
 
   const swap1ForExact0: SwapFunction = (amount, to, sqrtPriceLimitX96) => {
-    return swap(token1 as Contract, [0, amount], to, sqrtPriceLimitX96)
+    return swap(token1, [0, amount], to, sqrtPriceLimitX96)
   }
 
   const mint: MintFunction = async (recipient, tickLower, tickUpper, liquidity) => {

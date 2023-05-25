@@ -3,13 +3,16 @@ import { BitMathTest } from '../typechain/BitMathTest'
 import { ethers } from 'hardhat'
 import snapshotGasCost from './shared/snapshotGasCost'
 import { deployContract } from './shared/zkSyncUtils'
+
 const { BigNumber } = ethers
 
 describe('BitMath', () => {
   let bitMath: BitMathTest
-
+  const fixture = async () => {
+    return (await deployContract('BitMathTest')) as BitMathTest
+  }
   beforeEach('deploy BitMathTest', async () => {
-    bitMath = (await deployContract('BitMathTest')) as BitMathTest
+    bitMath = await fixture()
   })
 
   describe('#mostSignificantBit', () => {

@@ -2,9 +2,9 @@ import { ethers } from 'hardhat'
 import { UniswapV3Factory } from '../typechain/UniswapV3Factory'
 import { expect } from './shared/expect'
 import snapshotGasCost from './shared/snapshotGasCost'
-import { deployContract, getWallets, getCreate2Address, loadArtifact } from './shared/zkSyncUtils'
-import { FeeAmount, TICK_SPACINGS } from './shared/utilities'
-import { Contract } from 'zksync-web3'
+
+import { FeeAmount, getCreate2Address, TICK_SPACINGS } from './shared/utilities'
+import { deployContract, getWallets, loadArtifact, provider } from './shared/zkSyncUtils'
 
 const { constants } = ethers
 
@@ -18,13 +18,16 @@ describe('UniswapV3Factory', () => {
 
   let factory: UniswapV3Factory
   let poolBytecode: string
+  const fixture = async () => {
+    return (await deployContract('UniswapV3Factory')) as UniswapV3Factory
+  }
 
   before('load pool bytecode', async () => {
-    poolBytecode = (await ethers.getContractFactory('UniswapV3Pool')).bytecode
+    poolBytecode = (await loadArtifact('UniswapV3Pool')).bytecode
   })
 
   beforeEach('deploy factory', async () => {
-    factory = await deployContract('UniswapV3Factory') as UniswapV3Factory
+    factory = await fixture()
   })
 
   it('owner is deployer', async () => {
@@ -32,13 +35,13 @@ describe('UniswapV3Factory', () => {
   })
 
   it('factory bytecode size', async () => {
-    expect(((await wallet.provider.getCode(factory.address)).length - 2) / 2).to.matchSnapshot()
+    expect(((await provider.getCode(factory.address)).length - 2) / 2).to.matchSnapshot()
   })
 
   it('pool bytecode size', async () => {
     await (await factory.createPool(TEST_ADDRESSES[0], TEST_ADDRESSES[1], FeeAmount.MEDIUM)).wait()
     const poolAddress = getCreate2Address(factory.address, TEST_ADDRESSES, FeeAmount.MEDIUM, poolBytecode)
-    expect(((await wallet.provider.getCode(poolAddress)).length - 2) / 2).to.matchSnapshot()
+    expect(((await provider.getCode(poolAddress)).length - 2) / 2).to.matchSnapshot()
   })
 
   it('initial enabled fee amounts', async () => {
@@ -63,9 +66,8 @@ describe('UniswapV3Factory', () => {
     expect(await factory.getPool(tokens[0], tokens[1], feeAmount), 'getPool in order').to.eq(create2Address)
     expect(await factory.getPool(tokens[1], tokens[0], feeAmount), 'getPool in reverse').to.eq(create2Address)
 
-    const poolContractArtifact = await loadArtifact('UniswapV3Pool');
-    const pool = new Contract(create2Address, poolContractArtifact.abi, wallet)
-  
+    const poolContractArtifact = await loadArtifact('UniswapV3Pool')
+    const pool = new ethers.Contract(create2Address, poolContractArtifact.abi, wallet)
     expect(await pool.factory(), 'pool factory address').to.eq(factory.address)
     expect(await pool.token0(), 'pool token0').to.eq(TEST_ADDRESSES[0])
     expect(await pool.token1(), 'pool token1').to.eq(TEST_ADDRESSES[1])
@@ -112,7 +114,7 @@ describe('UniswapV3Factory', () => {
 
   describe('#setOwner', () => {
     it('fails if caller is not owner', async () => {
-      await expect(factory.connect(other as any).setOwner(wallet.address)).to.be.reverted
+      await expect(factory.connect(other).setOwner(wallet.address)).to.be.reverted
     })
 
     it('updates owner', async () => {
@@ -134,7 +136,7 @@ describe('UniswapV3Factory', () => {
 
   describe('#enableFeeAmount', () => {
     it('fails if caller is not owner', async () => {
-      await expect(factory.connect(other as any).enableFeeAmount(100, 2)).to.be.reverted
+      await expect(factory.connect(other).enableFeeAmount(100, 2)).to.be.reverted
     })
     it('fails if fee is too great', async () => {
       await expect(factory.enableFeeAmount(1000000, 10)).to.be.reverted

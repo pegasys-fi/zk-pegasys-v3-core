@@ -3,9 +3,9 @@ import { TestERC20 } from '../typechain/TestERC20'
 import { UniswapV3Factory } from '../typechain/UniswapV3Factory'
 import { MockTimeUniswapV3Pool } from '../typechain/MockTimeUniswapV3Pool'
 import { expect } from './shared/expect'
-import { getWallets } from './shared/zkSyncUtils'
 
-import { poolFixture } from './shared/zkSyncFixtures'
+import { poolFixture } from './shared/fixtures'
+import { getWallets } from './shared/zkSyncUtils'
 
 import {
   FeeAmount,

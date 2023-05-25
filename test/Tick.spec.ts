@@ -2,8 +2,8 @@ import { ethers } from 'hardhat'
 import { BigNumber } from 'ethers'
 import { TickTest } from '../typechain/TickTest'
 import { expect } from './shared/expect'
-import { deployContract } from './shared/zkSyncUtils'
 import { FeeAmount, getMaxLiquidityPerTick, TICK_SPACINGS } from './shared/utilities'
+import { deployContract } from './shared/zkSyncUtils'
 
 const MaxUint128 = BigNumber.from(2).pow(128).sub(1)
 

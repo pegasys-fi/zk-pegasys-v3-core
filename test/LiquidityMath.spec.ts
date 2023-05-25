@@ -8,9 +8,11 @@ const { BigNumber } = ethers
 
 describe('LiquidityMath', () => {
   let liquidityMath: LiquidityMathTest
-
+  const fixture = async () => {
+    return (await deployContract('LiquidityMathTest')) as LiquidityMathTest
+  }
   beforeEach('deploy LiquidityMathTest', async () => {
-    liquidityMath = await deployContract('LiquidityMathTest') as LiquidityMathTest
+    liquidityMath = await fixture()
   })
 
   describe('#addDelta', () => {

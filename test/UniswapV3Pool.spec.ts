@@ -1,4 +1,3 @@
-import { ethers, waffle } from 'hardhat'
 import { BigNumber, BigNumberish, constants } from 'ethers'
 import { TestERC20 } from '../typechain/TestERC20'
 import { UniswapV3Factory } from '../typechain/UniswapV3Factory'
@@ -6,9 +5,9 @@ import { MockTimeUniswapV3Pool } from '../typechain/MockTimeUniswapV3Pool'
 import { TestUniswapV3SwapPay } from '../typechain/TestUniswapV3SwapPay'
 import checkObservationEquals from './shared/checkObservationEquals'
 import { expect } from './shared/expect'
-import { deployContract, getWallets, getCreate2Address, loadArtifact } from './shared/zkSyncUtils'
 
-import { poolFixture, TEST_POOL_START_TIME } from './shared/zkSyncFixtures'
+import { poolFixture, TEST_POOL_START_TIME } from './shared/fixtures'
+import { deployContract, getWallets } from './shared/zkSyncUtils'
 
 import {
   expandTo18Decimals,
@@ -69,7 +68,7 @@ describe('UniswapV3Pool', () => {
     ;({ token0, token1, token2, factory, createPool, swapTargetCallee: swapTarget } = await poolFixture())
 
     const oldCreatePool = createPool
-    createPool = async (_feeAmount: any, _tickSpacing: any) => {
+    createPool = async (_feeAmount, _tickSpacing) => {
       const pool = await oldCreatePool(_feeAmount, _tickSpacing)
       ;({
         swapToLowerPrice,
@@ -1582,7 +1581,7 @@ describe('UniswapV3Pool', () => {
       await expect(pool.increaseObservationCardinalityNext(2)).to.be.reverted
     })
     describe('after initialization', () => {
-      beforeEach('initialize the pool', async () => await (await (await pool.initialize(encodePriceSqrt(1, 1))).wait()))
+      beforeEach('initialize the pool', async () => await (await pool.initialize(encodePriceSqrt(1, 1))).wait())
       it('oracle starting state after initialization', async () => {
         const { observationCardinality, observationIndex, observationCardinalityNext } = await pool.slot0()
         expect(observationCardinality).to.eq(1)

@@ -1,11 +1,10 @@
 import { BigNumber } from 'ethers'
-import { ethers } from 'hardhat'
 import { TickMathTest } from '../typechain/TickMathTest'
 import { expect } from './shared/expect'
 import snapshotGasCost from './shared/snapshotGasCost'
-import { deployContract } from './shared/zkSyncUtils'
 import { encodePriceSqrt, MIN_SQRT_RATIO, MAX_SQRT_RATIO } from './shared/utilities'
 import Decimal from 'decimal.js'
+import { deployContract } from './shared/zkSyncUtils'
 
 const MIN_TICK = -887272
 const MAX_TICK = 887272

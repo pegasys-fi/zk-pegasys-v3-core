@@ -1,15 +1,14 @@
 import Decimal from 'decimal.js'
-import { BigNumber, BigNumberish } from 'ethers'
-import { ethers, waffle } from 'hardhat'
+import { BigNumber, BigNumberish, Wallet } from 'ethers'
+import { ethers } from 'hardhat'
 import { MockTimeUniswapV3Pool } from '../typechain/MockTimeUniswapV3Pool'
 import { TickMathTest } from '../typechain/TickMathTest'
 import { UniswapV3PoolSwapTest } from '../typechain/UniswapV3PoolSwapTest'
 import { expect } from './shared/expect'
-import { Wallet } from 'zksync-web3'
-import { deployContract, getWallets, getCreate2Address, loadArtifact } from './shared/zkSyncUtils'
 
-import { poolFixture } from './shared/zkSyncFixtures'
+import { poolFixture } from './shared/fixtures'
 import { formatPrice, formatTokenAmount } from './shared/format'
+import { deployContract, getWallets } from './shared/zkSyncUtils'
 
 import {
   createPoolFunctions,
@@ -89,6 +88,7 @@ describe('UniswapV3Pool arbitrage tests', () => {
             })
 
             const tester = (await deployContract('UniswapV3PoolSwapTest')) as UniswapV3PoolSwapTest
+
             const tickMath = (await deployContract('TickMathTest')) as TickMathTest
 
             await (await fix.token0.approve(tester.address, MaxUint256)).wait()
@@ -220,6 +220,7 @@ describe('UniswapV3Pool arbitrage tests', () => {
                 zeroForOne
                   ? await (await swapToLowerPrice(priceSwapStart, arbitrageur.address)).wait()
                   : await (await swapToHigherPrice(priceSwapStart, arbitrageur.address)).wait()
+
                 const profitToken1AfterFrontRun = valueToken1(arbBalance0, arbBalance1)
 
                 const tickLower = zeroForOne ? tickAfterFirstTickAboveMarginPrice : firstTickAboveMarginalPrice

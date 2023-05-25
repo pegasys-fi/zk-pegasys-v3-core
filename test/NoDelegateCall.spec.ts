@@ -1,25 +1,17 @@
+import { ethers } from 'hardhat'
 import { NoDelegateCallTest } from '../typechain/NoDelegateCallTest'
-import { deployContract, getWallets, loadArtifact } from './shared/zkSyncUtils'
 import { expect } from './shared/expect'
 import snapshotGasCost from './shared/snapshotGasCost'
-import { Wallet } from 'zksync-web3'
-import { Contract } from 'ethers'
-import { ZkSyncArtifact } from '@matterlabs/hardhat-zksync-deploy/dist/types'
+import { deployContract, getWallets, loadArtifact } from './shared/zkSyncUtils'
 
 describe('NoDelegateCall', () => {
-    let wallet: Wallet;
+  const [wallet, other] = getWallets()
 
-    before('create fixture loader', async () => {
-        ;[wallet] = getWallets()
-      })
-
-  const noDelegateCallFixture = async () => {    
-    const noDelegateCallTestContract = (await deployContract('NoDelegateCallTest'))
+  const noDelegateCallFixture = async () => {
     const noDelegateCallTestArtifact = await loadArtifact('NoDelegateCallTest')
-    const noDelegateCallTest = new Contract(noDelegateCallTestContract.address, noDelegateCallTestArtifact.abi, wallet)
-
-    const proxyTestContract = (await deployContract('ProxyTest', [noDelegateCallTest.address]))
-    const proxy = new Contract(proxyTestContract.address, noDelegateCallTestArtifact.abi, wallet)
+    const noDelegateCallTest = (await deployContract('NoDelegateCallTest')) as NoDelegateCallTest
+    const proxyTest = (await deployContract('ProxyTest', [noDelegateCallTest.address]))
+    const proxy = (new ethers.Contract(proxyTest.address, noDelegateCallTestArtifact.abi, wallet)) as NoDelegateCallTest
     return { noDelegateCallTest, proxy }
   }
 

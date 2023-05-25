@@ -15,7 +15,7 @@ Decimal.config({ toExpNeg: -500, toExpPos: 500 })
 describe('FullMath', () => {
   let fullMath: FullMathTest
   before('deploy FullMathTest', async () => {
-    fullMath = (await deployContract('FullMathTest')) as FullMathTest;
+    fullMath = (await deployContract('FullMathTest')) as FullMathTest
   })
 
   describe('#mulDiv', () => {

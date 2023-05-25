@@ -6,6 +6,7 @@ git checkout 1c016dcd143c42c2ecf696209155bb1efee842ef
 rm -rf ./volumes
 mkdir -p ./volumes
 mkdir -p ./volumes/postgres ./volumes/geth ./volumes/zksync/env/dev ./volumes/zksync/data
+touch ./volumes/zksync/env.env
 
 docker-compose down -v
 docker-compose pull

@@ -1,11 +1,11 @@
 import { BigNumber } from 'ethers'
 import { SwapMathTest } from '../typechain/SwapMathTest'
 
-import { deployContract } from './shared/zkSyncUtils'
 import { expect } from './shared/expect'
 import snapshotGasCost from './shared/snapshotGasCost'
 import { encodePriceSqrt, expandTo18Decimals } from './shared/utilities'
 import { SqrtPriceMathTest } from '../typechain/SqrtPriceMathTest'
+import { deployContract } from './shared/zkSyncUtils'
 
 describe('SwapMath', () => {
   let swapMath: SwapMathTest

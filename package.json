@@ -19,10 +19,6 @@
   "files": [
     "contracts/interfaces",
     "contracts/libraries",
-    "artifacts/contracts/UniswapV3Factory.sol/UniswapV3Factory.json",
-    "artifacts/contracts/UniswapV3Pool.sol/UniswapV3Pool.json",
-    "artifacts/contracts/interfaces/**/*.json",
-    "!artifacts/contracts/interfaces/**/*.dbg.json",
     "artifacts-zk/contracts/UniswapV3Factory.sol/UniswapV3Factory.json",
     "artifacts-zk/contracts/UniswapV3Pool.sol/UniswapV3Pool.json",
     "artifacts-zk/contracts/interfaces/**/*.json",
@@ -31,14 +27,11 @@
   "engines": {
     "node": ">=10"
   },
-  "dependencies": {
-    "@matterlabs/hardhat-zksync-chai-matchers": "^0.1.2",
-    "@matterlabs/hardhat-zksync-deploy": "^0.6.3",
-    "@nomicfoundation/hardhat-chai-matchers": "^1.0.6"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@matterlabs/hardhat-zksync-solc": "^0.3.16",
-    "@matterlabs/hardhat-zksync-verify": "^0.1.5",
+    "@matterlabs/hardhat-zksync-deploy": "^0.6.3",
+    "@matterlabs/hardhat-zksync-solc": "^0.3.17",
+    "@matterlabs/hardhat-zksync-verify": "^0.1.7",
     "@nomiclabs/hardhat-ethers": "^2.0.2",
     "@nomiclabs/hardhat-etherscan": "^2.1.1",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
@@ -49,7 +42,7 @@
     "decimal.js": "^10.2.1",
     "ethereum-waffle": "^3.0.2",
     "ethers": "^5.7.0",
-    "hardhat": "^2.14.0",
+    "hardhat": "^2.2.0",
     "hardhat-typechain": "^0.3.5",
     "mocha": "^6.2.2",
     "mocha-chai-jest-snapshot": "^1.1.0",
@@ -65,7 +58,7 @@
   },
   "scripts": {
     "compile": "hardhat compile",
-    "test": "hardhat test --network zkSyncLocalhost",
+    "test": "hardhat test",
     "local-setup": "./scripts/start-local-setup.sh"
   }
 }

@@ -4,10 +4,9 @@ import { ethers } from 'hardhat'
 import { MockTimeUniswapV3Pool } from '../typechain/MockTimeUniswapV3Pool'
 import { TestERC20 } from '../typechain/TestERC20'
 
-import { getWallets } from './shared/zkSyncUtils'
 import { TestUniswapV3Callee } from '../typechain/TestUniswapV3Callee'
 import { expect } from './shared/expect'
-import { poolFixture } from './shared/zkSyncFixtures'
+import { poolFixture } from './shared/fixtures'
 import { formatPrice, formatTokenAmount } from './shared/format'
 import {
   createPoolFunctions,
@@ -22,6 +21,7 @@ import {
   MIN_SQRT_RATIO,
   TICK_SPACINGS,
 } from './shared/utilities'
+import { getWallets } from './shared/zkSyncUtils'
 
 Decimal.config({ toExpNeg: -500, toExpPos: 500 })
 
@@ -500,13 +500,8 @@ describe('UniswapV3Pool swap tests', () => {
           try {
             await (await tx).wait()
           } catch (error) {
-            // Convert zkSync server error message to the Hardhat format
-            const swapError = error.message
-              .match(/cannot estimate gas: [^\\]*/)
-              .toString()
-              .replace("cannot estimate gas:", "VM Exception while processing transaction: revert");
             expect({
-              swapError,
+              swapError: error.message,
               poolBalance0: poolBalance0.toString(),
               poolBalance1: poolBalance1.toString(),
               poolPriceBefore: formatPrice(slot0.sqrtPriceX96),
