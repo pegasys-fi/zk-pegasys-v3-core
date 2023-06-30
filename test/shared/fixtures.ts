@@ -78,7 +78,7 @@ export const poolFixture = async function (): Promise<PoolFixture> {
       )
 
       const receipt = await tx.wait()
-      const poolAddress = receipt.events?.[0].args?.pool as string
+      const poolAddress = receipt.events?.[2].args?.pool as string
       return new ethers.Contract(poolAddress, MockTimeUniswapV3PoolArtifact.abi, getWallets()[0]) as MockTimeUniswapV3Pool
     },
   }
