@@ -206,6 +206,7 @@ describe('UniswapV3Pool arbitrage tests', () => {
                   : firstTickAboveMarginalPrice + tickSpacing
 
                 const priceSwapStart = await tickMath.getSqrtRatioAtTick(firstTickAboveMarginalPrice)
+
                 let arbBalance0 = BigNumber.from(0)
                 let arbBalance1 = BigNumber.from(0)
 
