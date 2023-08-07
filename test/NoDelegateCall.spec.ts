@@ -10,8 +10,8 @@ describe('NoDelegateCall', () => {
   const noDelegateCallFixture = async () => {
     const noDelegateCallTestArtifact = await loadArtifact('NoDelegateCallTest')
     const noDelegateCallTest = (await deployContract('NoDelegateCallTest')) as NoDelegateCallTest
-    const proxyTest = (await deployContract('ProxyTest', [noDelegateCallTest.address]))
-    const proxy = (new ethers.Contract(proxyTest.address, noDelegateCallTestArtifact.abi, wallet)) as NoDelegateCallTest
+    const proxyTest = await deployContract('ProxyTest', [noDelegateCallTest.address])
+    const proxy = new ethers.Contract(proxyTest.address, noDelegateCallTestArtifact.abi, wallet) as NoDelegateCallTest
     return { noDelegateCallTest, proxy }
   }
 

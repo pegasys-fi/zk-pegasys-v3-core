@@ -50,9 +50,7 @@ describe('UniswapV3Pool', () => {
   let createPool: ThenArg<ReturnType<typeof poolFixture>>['createPool']
 
   beforeEach('deploy first fixture', async () => {
-    ;({ token0, token1, token2, factory, createPool, swapTargetCallee, swapTargetRouter } = await 
-      poolFixture()
-    )
+    ;({ token0, token1, token2, factory, createPool, swapTargetCallee, swapTargetRouter } = await poolFixture())
 
     const createPoolWrapped = async (
       amount: number,

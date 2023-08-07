@@ -11,8 +11,8 @@ describe('SwapMath', () => {
   let swapMath: SwapMathTest
   let sqrtPriceMath: SqrtPriceMathTest
   before(async () => {
-    swapMath = await deployContract('SwapMathTest') as SwapMathTest
-    sqrtPriceMath = await deployContract('SqrtPriceMathTest') as SqrtPriceMathTest
+    swapMath = (await deployContract('SwapMathTest')) as SwapMathTest
+    sqrtPriceMath = (await deployContract('SqrtPriceMathTest')) as SqrtPriceMathTest
   })
 
   describe('#computeSwapStep', () => {

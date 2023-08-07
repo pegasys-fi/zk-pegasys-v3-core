@@ -13,7 +13,7 @@ describe('Tick', () => {
   let tickTest: TickTest
 
   beforeEach('deploy TickTest', async () => {
-    tickTest = await deployContract('TickTest') as TickTest
+    tickTest = (await deployContract('TickTest')) as TickTest
   })
 
   describe('#tickSpacingToMaxLiquidityPerTick', () => {
@@ -62,84 +62,96 @@ describe('Tick', () => {
     })
 
     it('subtracts upper tick if below', async () => {
-      await (await tickTest.setTick(2, {
-        feeGrowthOutside0X128: 2,
-        feeGrowthOutside1X128: 3,
-        liquidityGross: 0,
-        liquidityNet: 0,
-        secondsPerLiquidityOutsideX128: 0,
-        tickCumulativeOutside: 0,
-        secondsOutside: 0,
-        initialized: true,
-      })).wait()
+      await (
+        await tickTest.setTick(2, {
+          feeGrowthOutside0X128: 2,
+          feeGrowthOutside1X128: 3,
+          liquidityGross: 0,
+          liquidityNet: 0,
+          secondsPerLiquidityOutsideX128: 0,
+          tickCumulativeOutside: 0,
+          secondsOutside: 0,
+          initialized: true,
+        })
+      ).wait()
       const { feeGrowthInside0X128, feeGrowthInside1X128 } = await tickTest.getFeeGrowthInside(-2, 2, 0, 15, 15)
       expect(feeGrowthInside0X128).to.eq(13)
       expect(feeGrowthInside1X128).to.eq(12)
     })
 
     it('subtracts lower tick if above', async () => {
-      await (await tickTest.setTick(-2, {
-        feeGrowthOutside0X128: 2,
-        feeGrowthOutside1X128: 3,
-        liquidityGross: 0,
-        liquidityNet: 0,
-        secondsPerLiquidityOutsideX128: 0,
-        tickCumulativeOutside: 0,
-        secondsOutside: 0,
-        initialized: true,
-      })).wait()
+      await (
+        await tickTest.setTick(-2, {
+          feeGrowthOutside0X128: 2,
+          feeGrowthOutside1X128: 3,
+          liquidityGross: 0,
+          liquidityNet: 0,
+          secondsPerLiquidityOutsideX128: 0,
+          tickCumulativeOutside: 0,
+          secondsOutside: 0,
+          initialized: true,
+        })
+      ).wait()
       const { feeGrowthInside0X128, feeGrowthInside1X128 } = await tickTest.getFeeGrowthInside(-2, 2, 0, 15, 15)
       expect(feeGrowthInside0X128).to.eq(13)
       expect(feeGrowthInside1X128).to.eq(12)
     })
 
     it('subtracts upper and lower tick if inside', async () => {
-      await (await tickTest.setTick(-2, {
-        feeGrowthOutside0X128: 2,
-        feeGrowthOutside1X128: 3,
-        liquidityGross: 0,
-        liquidityNet: 0,
-        secondsPerLiquidityOutsideX128: 0,
-        tickCumulativeOutside: 0,
-        secondsOutside: 0,
-        initialized: true,
-      })).wait()
-      await (await tickTest.setTick(2, {
-        feeGrowthOutside0X128: 4,
-        feeGrowthOutside1X128: 1,
-        liquidityGross: 0,
-        liquidityNet: 0,
-        secondsPerLiquidityOutsideX128: 0,
-        tickCumulativeOutside: 0,
-        secondsOutside: 0,
-        initialized: true,
-      })).wait()
+      await (
+        await tickTest.setTick(-2, {
+          feeGrowthOutside0X128: 2,
+          feeGrowthOutside1X128: 3,
+          liquidityGross: 0,
+          liquidityNet: 0,
+          secondsPerLiquidityOutsideX128: 0,
+          tickCumulativeOutside: 0,
+          secondsOutside: 0,
+          initialized: true,
+        })
+      ).wait()
+      await (
+        await tickTest.setTick(2, {
+          feeGrowthOutside0X128: 4,
+          feeGrowthOutside1X128: 1,
+          liquidityGross: 0,
+          liquidityNet: 0,
+          secondsPerLiquidityOutsideX128: 0,
+          tickCumulativeOutside: 0,
+          secondsOutside: 0,
+          initialized: true,
+        })
+      ).wait()
       const { feeGrowthInside0X128, feeGrowthInside1X128 } = await tickTest.getFeeGrowthInside(-2, 2, 0, 15, 15)
       expect(feeGrowthInside0X128).to.eq(9)
       expect(feeGrowthInside1X128).to.eq(11)
     })
 
     it('works correctly with overflow on inside tick', async () => {
-      await (await tickTest.setTick(-2, {
-        feeGrowthOutside0X128: constants.MaxUint256.sub(3),
-        feeGrowthOutside1X128: constants.MaxUint256.sub(2),
-        liquidityGross: 0,
-        liquidityNet: 0,
-        secondsPerLiquidityOutsideX128: 0,
-        tickCumulativeOutside: 0,
-        secondsOutside: 0,
-        initialized: true,
-      })).wait()
-      await (await tickTest.setTick(2, {
-        feeGrowthOutside0X128: 3,
-        feeGrowthOutside1X128: 5,
-        liquidityGross: 0,
-        liquidityNet: 0,
-        secondsPerLiquidityOutsideX128: 0,
-        tickCumulativeOutside: 0,
-        secondsOutside: 0,
-        initialized: true,
-      })).wait()
+      await (
+        await tickTest.setTick(-2, {
+          feeGrowthOutside0X128: constants.MaxUint256.sub(3),
+          feeGrowthOutside1X128: constants.MaxUint256.sub(2),
+          liquidityGross: 0,
+          liquidityNet: 0,
+          secondsPerLiquidityOutsideX128: 0,
+          tickCumulativeOutside: 0,
+          secondsOutside: 0,
+          initialized: true,
+        })
+      ).wait()
+      await (
+        await tickTest.setTick(2, {
+          feeGrowthOutside0X128: 3,
+          feeGrowthOutside1X128: 5,
+          liquidityGross: 0,
+          liquidityNet: 0,
+          secondsPerLiquidityOutsideX128: 0,
+          tickCumulativeOutside: 0,
+          secondsOutside: 0,
+          initialized: true,
+        })
+      ).wait()
       const { feeGrowthInside0X128, feeGrowthInside1X128 } = await tickTest.getFeeGrowthInside(-2, 2, 0, 15, 15)
       expect(feeGrowthInside0X128).to.eq(16)
       expect(feeGrowthInside1X128).to.eq(13)
@@ -241,16 +253,18 @@ describe('Tick', () => {
   // this is skipped because the presence of the method causes slither to fail
   describe('#clear', async () => {
     it('deletes all the data in the tick', async () => {
-      await (await tickTest.setTick(2, {
-        feeGrowthOutside0X128: 1,
-        feeGrowthOutside1X128: 2,
-        liquidityGross: 3,
-        liquidityNet: 4,
-        secondsPerLiquidityOutsideX128: 5,
-        tickCumulativeOutside: 6,
-        secondsOutside: 7,
-        initialized: true,
-      })).wait()
+      await (
+        await tickTest.setTick(2, {
+          feeGrowthOutside0X128: 1,
+          feeGrowthOutside1X128: 2,
+          liquidityGross: 3,
+          liquidityNet: 4,
+          secondsPerLiquidityOutsideX128: 5,
+          tickCumulativeOutside: 6,
+          secondsOutside: 7,
+          initialized: true,
+        })
+      ).wait()
       await (await tickTest.clear(2)).wait()
       const {
         feeGrowthOutside0X128,
@@ -275,16 +289,18 @@ describe('Tick', () => {
 
   describe('#cross', () => {
     it('flips the growth variables', async () => {
-      await (await tickTest.setTick(2, {
-        feeGrowthOutside0X128: 1,
-        feeGrowthOutside1X128: 2,
-        liquidityGross: 3,
-        liquidityNet: 4,
-        secondsPerLiquidityOutsideX128: 5,
-        tickCumulativeOutside: 6,
-        secondsOutside: 7,
-        initialized: true,
-      })).wait()
+      await (
+        await tickTest.setTick(2, {
+          feeGrowthOutside0X128: 1,
+          feeGrowthOutside1X128: 2,
+          liquidityGross: 3,
+          liquidityNet: 4,
+          secondsPerLiquidityOutsideX128: 5,
+          tickCumulativeOutside: 6,
+          secondsOutside: 7,
+          initialized: true,
+        })
+      ).wait()
       await (await tickTest.cross(2, 7, 9, 8, 15, 10)).wait()
       const {
         feeGrowthOutside0X128,
@@ -300,16 +316,18 @@ describe('Tick', () => {
       expect(secondsOutside).to.eq(3)
     })
     it('two flips are no op', async () => {
-      await (await tickTest.setTick(2, {
-        feeGrowthOutside0X128: 1,
-        feeGrowthOutside1X128: 2,
-        liquidityGross: 3,
-        liquidityNet: 4,
-        secondsPerLiquidityOutsideX128: 5,
-        tickCumulativeOutside: 6,
-        secondsOutside: 7,
-        initialized: true,
-      })).wait()
+      await (
+        await tickTest.setTick(2, {
+          feeGrowthOutside0X128: 1,
+          feeGrowthOutside1X128: 2,
+          liquidityGross: 3,
+          liquidityNet: 4,
+          secondsPerLiquidityOutsideX128: 5,
+          tickCumulativeOutside: 6,
+          secondsOutside: 7,
+          initialized: true,
+        })
+      ).wait()
       await (await tickTest.cross(2, 7, 9, 8, 15, 10)).wait()
       await (await tickTest.cross(2, 7, 9, 8, 15, 10)).wait()
       const {

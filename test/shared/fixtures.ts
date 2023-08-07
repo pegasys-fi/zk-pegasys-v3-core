@@ -13,7 +13,7 @@ interface FactoryFixture {
 }
 
 async function factoryFixture(): Promise<FactoryFixture> {
-  const factory = await deployContract('UniswapV3Factory') as UniswapV3Factory
+  const factory = (await deployContract('UniswapV3Factory')) as UniswapV3Factory
   return { factory }
 }
 
@@ -68,7 +68,9 @@ export const poolFixture = async function (): Promise<PoolFixture> {
     swapTargetCallee,
     swapTargetRouter,
     createPool: async (fee, tickSpacing, firstToken = token0, secondToken = token1) => {
-      const mockTimePoolDeployer = (await deployContract('MockTimeUniswapV3PoolDeployer')) as MockTimeUniswapV3PoolDeployer
+      const mockTimePoolDeployer = (await deployContract(
+        'MockTimeUniswapV3PoolDeployer'
+      )) as MockTimeUniswapV3PoolDeployer
       const tx = await mockTimePoolDeployer.deploy(
         factory.address,
         firstToken.address,
@@ -79,7 +81,11 @@ export const poolFixture = async function (): Promise<PoolFixture> {
 
       const receipt = await tx.wait()
       const poolAddress = receipt.events?.[2].args?.pool as string
-      return new ethers.Contract(poolAddress, MockTimeUniswapV3PoolArtifact.abi, getWallets()[0]) as MockTimeUniswapV3Pool
+      return new ethers.Contract(
+        poolAddress,
+        MockTimeUniswapV3PoolArtifact.abi,
+        getWallets()[0]
+      ) as MockTimeUniswapV3Pool
     },
   }
 }

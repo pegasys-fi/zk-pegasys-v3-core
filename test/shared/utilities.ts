@@ -120,7 +120,7 @@ export function createPoolFunctions({
   ): Promise<ContractTransaction> {
     const method = inputToken === token0 ? swapTarget.swapToLowerSqrtPrice : swapTarget.swapToHigherSqrtPrice
 
-    await(await inputToken.approve(swapTarget.address, constants.MaxUint256)).wait()
+    await (await inputToken.approve(swapTarget.address, constants.MaxUint256)).wait()
 
     const toAddress = typeof to === 'string' ? to : to.address
 
@@ -151,7 +151,7 @@ export function createPoolFunctions({
         sqrtPriceLimitX96 = MAX_SQRT_RATIO.sub(1)
       }
     }
-    await(await inputToken.approve(swapTarget.address, constants.MaxUint256)).wait()
+    await (await inputToken.approve(swapTarget.address, constants.MaxUint256)).wait()
 
     const toAddress = typeof to === 'string' ? to : to.address
 
@@ -183,8 +183,8 @@ export function createPoolFunctions({
   }
 
   const mint: MintFunction = async (recipient, tickLower, tickUpper, liquidity) => {
-    await(await token0.approve(swapTarget.address, constants.MaxUint256)).wait()
-    await(await token1.approve(swapTarget.address, constants.MaxUint256)).wait()
+    await (await token0.approve(swapTarget.address, constants.MaxUint256)).wait()
+    await (await token1.approve(swapTarget.address, constants.MaxUint256)).wait()
     return swapTarget.mint(pool.address, recipient, tickLower, tickUpper, liquidity)
   }
 
@@ -237,14 +237,14 @@ export function createMultiPoolFunctions({
 }): MultiPoolFunctions {
   async function swapForExact0Multi(amountOut: BigNumberish, to: Wallet | string): Promise<ContractTransaction> {
     const method = swapTarget.swapForExact0Multi
-    await(await inputToken.approve(swapTarget.address, constants.MaxUint256)).wait()
+    await (await inputToken.approve(swapTarget.address, constants.MaxUint256)).wait()
     const toAddress = typeof to === 'string' ? to : to.address
     return method(toAddress, poolInput.address, poolOutput.address, amountOut)
   }
 
   async function swapForExact1Multi(amountOut: BigNumberish, to: Wallet | string): Promise<ContractTransaction> {
     const method = swapTarget.swapForExact1Multi
-    await(await inputToken.approve(swapTarget.address, constants.MaxUint256)).wait()
+    await (await inputToken.approve(swapTarget.address, constants.MaxUint256)).wait()
     const toAddress = typeof to === 'string' ? to : to.address
     return method(toAddress, poolInput.address, poolOutput.address, amountOut)
   }

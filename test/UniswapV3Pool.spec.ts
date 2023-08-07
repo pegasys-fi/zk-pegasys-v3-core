@@ -1080,7 +1080,9 @@ describe('UniswapV3Pool', () => {
       zeroForOne: boolean
       poke: boolean
     }) {
-      await (await (zeroForOne ? swapExact0For1(amount, wallet.address) : swapExact1For0(amount, wallet.address))).wait()
+      await (
+        await (zeroForOne ? swapExact0For1(amount, wallet.address) : swapExact1For0(amount, wallet.address))
+      ).wait()
 
       if (poke) await (await pool.burn(minTick, maxTick, 0)).wait()
 

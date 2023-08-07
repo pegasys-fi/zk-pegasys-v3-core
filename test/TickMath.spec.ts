@@ -15,7 +15,7 @@ describe('TickMath', () => {
   let tickMath: TickMathTest
 
   before('deploy TickMathTest', async () => {
-    tickMath = await deployContract('TickMathTest') as TickMathTest
+    tickMath = (await deployContract('TickMathTest')) as TickMathTest
   })
 
   describe('#getSqrtRatioAtTick', () => {

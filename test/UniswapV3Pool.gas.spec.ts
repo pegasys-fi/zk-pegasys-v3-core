@@ -22,7 +22,6 @@ import {
   MIN_SQRT_RATIO,
 } from './shared/utilities'
 
-
 describe('UniswapV3Pool gas tests', () => {
   const [wallet, other] = getWallets()
 
@@ -105,7 +104,14 @@ describe('UniswapV3Pool gas tests', () => {
         })
 
         it('first swap in block, large swap crossing several initialized ticks', async () => {
-          await (await mint(wallet.address, startingTick - 3 * tickSpacing, startingTick - tickSpacing, expandTo18Decimals(1))).wait()
+          await (
+            await mint(
+              wallet.address,
+              startingTick - 3 * tickSpacing,
+              startingTick - tickSpacing,
+              expandTo18Decimals(1)
+            )
+          ).wait()
           await mint(
             wallet.address,
             startingTick - 4 * tickSpacing,
@@ -124,7 +130,14 @@ describe('UniswapV3Pool gas tests', () => {
         })
 
         it('second swap in block, large swap crossing several initialized ticks', async () => {
-          await (await mint(wallet.address, startingTick - 3 * tickSpacing, startingTick - tickSpacing, expandTo18Decimals(1))).wait()
+          await (
+            await mint(
+              wallet.address,
+              startingTick - 3 * tickSpacing,
+              startingTick - tickSpacing,
+              expandTo18Decimals(1)
+            )
+          ).wait()
           await mint(
             wallet.address,
             startingTick - 4 * tickSpacing,
@@ -145,7 +158,14 @@ describe('UniswapV3Pool gas tests', () => {
         })
 
         it('large swap crossing several initialized ticks after some time passes', async () => {
-          await (await mint(wallet.address, startingTick - 3 * tickSpacing, startingTick - tickSpacing, expandTo18Decimals(1))).wait()
+          await (
+            await mint(
+              wallet.address,
+              startingTick - 3 * tickSpacing,
+              startingTick - tickSpacing,
+              expandTo18Decimals(1)
+            )
+          ).wait()
           await mint(
             wallet.address,
             startingTick - 4 * tickSpacing,
@@ -159,7 +179,14 @@ describe('UniswapV3Pool gas tests', () => {
         })
 
         it('large swap crossing several initialized ticks second time after some time passes', async () => {
-          await (await mint(wallet.address, startingTick - 3 * tickSpacing, startingTick - tickSpacing, expandTo18Decimals(1))).wait()
+          await (
+            await mint(
+              wallet.address,
+              startingTick - 3 * tickSpacing,
+              startingTick - tickSpacing,
+              expandTo18Decimals(1)
+            )
+          ).wait()
           await mint(
             wallet.address,
             startingTick - 4 * tickSpacing,

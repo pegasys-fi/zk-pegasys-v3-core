@@ -14,7 +14,7 @@ const {
 describe('SqrtPriceMath', () => {
   let sqrtPriceMath: SqrtPriceMathTest
   before(async () => {
-    sqrtPriceMath = await deployContract('SqrtPriceMathTest') as SqrtPriceMathTest
+    sqrtPriceMath = (await deployContract('SqrtPriceMathTest')) as SqrtPriceMathTest
   })
 
   describe('#getNextSqrtPriceFromInput', () => {

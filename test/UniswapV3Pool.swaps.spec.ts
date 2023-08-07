@@ -459,7 +459,9 @@ describe('UniswapV3Pool swap tests', () => {
         await (await pool.initialize(poolCase.startingPrice)).wait()
         // mint all positions
         for (const position of poolCase.positions) {
-          await (await poolFunctions.mint(wallet.address, position.tickLower, position.tickUpper, position.liquidity)).wait()
+          await (
+            await poolFunctions.mint(wallet.address, position.tickLower, position.tickUpper, position.liquidity)
+          ).wait()
         }
 
         const [poolBalance0, poolBalance1] = await Promise.all([
@@ -481,15 +483,15 @@ describe('UniswapV3Pool swap tests', () => {
       let poolFunctions: PoolFunctions
 
       beforeEach('load fixture', async () => {
-        ;({ token0, token1, pool, poolFunctions, poolBalance0, poolBalance1, swapTarget } = await 
-          poolCaseFixture()
-        )
+        ;({ token0, token1, pool, poolFunctions, poolBalance0, poolBalance1, swapTarget } = await poolCaseFixture())
       })
 
       afterEach('check can burn positions', async () => {
         for (const { liquidity, tickUpper, tickLower } of poolCase.positions) {
           await (await pool.burn(tickLower, tickUpper, liquidity)).wait()
-          await (await pool.collect(POSITION_PROCEEDS_OUTPUT_ADDRESS, tickLower, tickUpper, MaxUint128, MaxUint128)).wait()
+          await (
+            await pool.collect(POSITION_PROCEEDS_OUTPUT_ADDRESS, tickLower, tickUpper, MaxUint128, MaxUint128)
+          ).wait()
         }
       })
 

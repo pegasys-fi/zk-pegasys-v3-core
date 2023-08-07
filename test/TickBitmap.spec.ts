@@ -7,7 +7,7 @@ describe('TickBitmap', () => {
   let tickBitmap: TickBitmapTest
 
   beforeEach('deploy TickBitmapTest', async () => {
-    tickBitmap = await deployContract('TickBitmapTest') as TickBitmapTest
+    tickBitmap = (await deployContract('TickBitmapTest')) as TickBitmapTest
   })
 
   async function initTicks(ticks: number[]): Promise<void> {

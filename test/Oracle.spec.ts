@@ -13,16 +13,18 @@ describe('Oracle', () => {
   const [wallet, other] = getWallets()
 
   const oracleFixture = async () => {
-    return await deployContract('OracleTest') as OracleTest
+    return (await deployContract('OracleTest')) as OracleTest
   }
 
   const initializedOracleFixture = async () => {
     const oracle = await oracleFixture()
-    await (await oracle.initialize({
-      time: 0,
-      tick: 0,
-      liquidity: 0,
-    })).wait()
+    await (
+      await oracle.initialize({
+        time: 0,
+        tick: 0,
+        liquidity: 0,
+      })
+    ).wait()
     return oracle
   }
 
@@ -101,11 +103,11 @@ describe('Oracle', () => {
     })
 
     it('grow after wrap', async () => {
-      await(await oracle.grow(2)).wait()
-      await(await oracle.update({ advanceTimeBy: 2, liquidity: 1, tick: 1 })).wait() // index is now 1
-      await(await oracle.update({ advanceTimeBy: 2, liquidity: 1, tick: 1 })).wait() // index is now 0 again
+      await (await oracle.grow(2)).wait()
+      await (await oracle.update({ advanceTimeBy: 2, liquidity: 1, tick: 1 })).wait() // index is now 1
+      await (await oracle.update({ advanceTimeBy: 2, liquidity: 1, tick: 1 })).wait() // index is now 0 again
       expect(await oracle.index()).to.eq(0)
-      await(await oracle.grow(3)).wait()
+      await (await oracle.grow(3)).wait()
       expect(await oracle.index()).to.eq(0)
       expect(await oracle.cardinality()).to.eq(2)
       expect(await oracle.cardinalityNext()).to.eq(3)
