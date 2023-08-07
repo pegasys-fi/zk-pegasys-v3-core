@@ -14,7 +14,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Uniswap/uniswap-v3-core"
+    "url": "https://github.com/matter-labs/v3-core"
   },
   "files": [
     "contracts/interfaces",
@@ -58,7 +58,6 @@
   },
   "scripts": {
     "compile": "hardhat compile",
-    "test": "hardhat test",
-    "local-setup": "./scripts/start-local-setup.sh"
+    "test": "hardhat test"
   }
 }
