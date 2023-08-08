@@ -26,9 +26,10 @@ describe('BitMath', () => {
       expect(await bitMath.mostSignificantBit(2)).to.eq(1)
     })
     it('all powers of 2', async () => {
-      const results = await Promise.all(
-        [...Array(255)].map((_, i) => bitMath.mostSignificantBit(BigNumber.from(2).pow(i)))
-      )
+      let results = []
+      for (let i = 0; i < 255; i++) {
+        results.push(await bitMath.mostSignificantBit(BigNumber.from(2).pow(i)))
+      }
       expect(results).to.deep.eq([...Array(255)].map((_, i) => i))
     })
     it('uint256(-1)', async () => {
@@ -57,9 +58,10 @@ describe('BitMath', () => {
       expect(await bitMath.leastSignificantBit(2)).to.eq(1)
     })
     it('all powers of 2', async () => {
-      const results = await Promise.all(
-        [...Array(255)].map((_, i) => bitMath.leastSignificantBit(BigNumber.from(2).pow(i)))
-      )
+      let results = []
+      for (let i = 0; i < 255; i++) {
+        results.push(await bitMath.leastSignificantBit(BigNumber.from(2).pow(i)))
+      }
       expect(results).to.deep.eq([...Array(255)].map((_, i) => i))
     })
     it('uint256(-1)', async () => {
