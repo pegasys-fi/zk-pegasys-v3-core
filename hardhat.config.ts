@@ -17,13 +17,13 @@ export default {
       url: 'https://testnet.era.zksync.dev',
       ethNetwork: `https://goerli.infura.io/v3/${process.env.INFURA_API_KEY}`,
       zksync: true,
-      verifyURL: 'https://zksync2-testnet-explorer.zksync.dev/contract_verification'
+      verifyURL: 'https://zksync2-testnet-explorer.zksync.dev/contract_verification',
     },
     zkSyncMainnet: {
       url: 'https://mainnet.era.zksync.io',
       ethNetwork: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
       zksync: true,
-      verifyURL: 'https://zksync2-mainnet-explorer.zksync.io/contract_verification'
+      verifyURL: 'https://zksync2-mainnet-explorer.zksync.io/contract_verification',
     },
   },
   defaultNetwork: 'zkSyncLocalhost',
@@ -60,6 +60,6 @@ export default {
     },
   },
   mocha: {
-    timeout: 100000000
+    timeout: 100000000,
   },
 }

@@ -24,14 +24,14 @@ contract ProxyTest {
             returndatacopy(ptr, 0, size)
             // Depending on the result value
             switch result
-            case 0 {
-                // End execution and revert state changes
-                revert(ptr, size)
-            }
-            default {
-                // Return data with length of size at pointers position
-                return(ptr, size)
-            }
+                case 0 {
+                    // End execution and revert state changes
+                    revert(ptr, size)
+                }
+                default {
+                    // Return data with length of size at pointers position
+                    return(ptr, size)
+                }
         }
     }
 }
