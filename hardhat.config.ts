@@ -8,8 +8,8 @@ import '@matterlabs/hardhat-zksync-verify'
 export default {
   networks: {
     zkSyncTestNode: {
-      url: 'http://localhost:8011',
-      ethNetwork: '',
+      url: "http://localhost:8011",
+      ethNetwork: "http://localhost:8545",
       zksync: true,
     },
     zkSyncTestnet: {
