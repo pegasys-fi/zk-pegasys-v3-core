@@ -1,11 +1,11 @@
-Core deployment for zkSync Uniswap v3
+Core deployment for zkSync Pegasys v3
 Copyright (C) 2023 GFX Labs, Inc.
 Licensed under GNU GPL v3 or later
 
 This software incorporates:
-Uniswap v3 Protocol
+Pegasys v3 Protocol
 Licensed under GNU GPL v2 or later
-See https://github.com/Uniswap/v3-core
+See https://github.com/Pegasys/v3-core
 
   This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by the
@@ -29,16 +29,16 @@ License text copyright (c) 2017 MariaDB Corporation Ab, All Rights Reserved.
 
 Parameters
 
-Licensor:             Uniswap Labs
+Licensor:             Pegasys Labs
 
-Licensed Work:        Uniswap V3 Core
-                      The Licensed Work is (c) 2021 Uniswap Labs
+Licensed Work:        Pegasys V3 Core
+                      The Licensed Work is (c) 2021 Pegasys Labs
 
 Additional Use Grant: Any uses listed and defined at
-                      v3-core-license-grants.uniswap.eth
+                      v3-core-license-grants.pegasys.eth
 
 Change Date:          The earlier of 2023-04-01 or a date specified at
-                      v3-core-license-date.uniswap.eth
+                      v3-core-license-date.pegasys.eth
 
 Change License:       GNU General Public License v2.0 or later
 

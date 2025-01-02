@@ -1,25 +1,25 @@
 {
-  "name": "era-uniswap-v3-core",
-  "description": "🦄 Core smart contracts of Uniswap V3 forked for zkSync Era",
+  "name": "zk-pegasys-v3-core",
+  "description": "🦄 Core smart contracts of Pegasys V3 forked for zkSync Era",
   "license": "GPL-3.0-or-later",
   "publishConfig": {
     "access": "public"
   },
   "version": "1.0.0",
   "keywords": [
-    "uniswap",
+    "pegasys",
     "core",
     "v3"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/uniswap-zksync/era-uniswap-v3-core"
+    "url": "https://github.com/pegasys-fi/zk-pegasys-v3-core"
   },
   "files": [
     "contracts/interfaces",
     "contracts/libraries",
-    "artifacts-zk/contracts/UniswapV3Factory.sol/UniswapV3Factory.json",
-    "artifacts-zk/contracts/UniswapV3Pool.sol/UniswapV3Pool.json",
+    "artifacts-zk/contracts/PegasysV3Factory.sol/PegasysV3Factory.json",
+    "artifacts-zk/contracts/PegasysV3Pool.sol/PegasysV3Pool.json",
     "artifacts-zk/contracts/interfaces/**/*.json",
     "!artifacts-zk/contracts/interfaces/**/*.dbg.json"
   ],

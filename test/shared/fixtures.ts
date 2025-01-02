@@ -1,19 +1,19 @@
 import { BigNumber } from 'ethers'
 import { ethers } from 'hardhat'
-import { MockTimeUniswapV3Pool } from '../../typechain/MockTimeUniswapV3Pool'
+import { MockTimePegasysV3Pool } from '../../typechain/MockTimePegasysV3Pool'
 import { TestERC20 } from '../../typechain/TestERC20'
-import { UniswapV3Factory } from '../../typechain/UniswapV3Factory'
-import { TestUniswapV3Callee } from '../../typechain/TestUniswapV3Callee'
-import { TestUniswapV3Router } from '../../typechain/TestUniswapV3Router'
-import { MockTimeUniswapV3PoolDeployer } from '../../typechain/MockTimeUniswapV3PoolDeployer'
+import { PegasysV3Factory } from '../../typechain/PegasysV3Factory'
+import { TestPegasysV3Callee } from '../../typechain/TestPegasysV3Callee'
+import { TestPegasysV3Router } from '../../typechain/TestPegasysV3Router'
+import { MockTimePegasysV3PoolDeployer } from '../../typechain/MockTimePegasysV3PoolDeployer'
 import { deployContract, getWallets, loadArtifact } from './zkSyncUtils'
 
 interface FactoryFixture {
-  factory: UniswapV3Factory
+  factory: PegasysV3Factory
 }
 
 async function factoryFixture(): Promise<FactoryFixture> {
-  const factory = (await deployContract('UniswapV3Factory')) as UniswapV3Factory
+  const factory = (await deployContract('PegasysV3Factory')) as PegasysV3Factory
   return { factory }
 }
 
@@ -38,14 +38,14 @@ async function tokensFixture(): Promise<TokensFixture> {
 type TokensAndFactoryFixture = FactoryFixture & TokensFixture
 
 interface PoolFixture extends TokensAndFactoryFixture {
-  swapTargetCallee: TestUniswapV3Callee
-  swapTargetRouter: TestUniswapV3Router
+  swapTargetCallee: TestPegasysV3Callee
+  swapTargetRouter: TestPegasysV3Router
   createPool(
     fee: number,
     tickSpacing: number,
     firstToken?: TestERC20,
     secondToken?: TestERC20
-  ): Promise<MockTimeUniswapV3Pool>
+  ): Promise<MockTimePegasysV3Pool>
 }
 
 // Monday, October 5, 2020 9:00:00 AM GMT-05:00
@@ -55,10 +55,10 @@ export const poolFixture = async function (): Promise<PoolFixture> {
   const { factory } = await factoryFixture()
   const { token0, token1, token2 } = await tokensFixture()
 
-  const MockTimeUniswapV3PoolArtifact = await loadArtifact('MockTimeUniswapV3Pool')
+  const MockTimePegasysV3PoolArtifact = await loadArtifact('MockTimePegasysV3Pool')
 
-  const swapTargetCallee = (await deployContract('TestUniswapV3Callee')) as TestUniswapV3Callee
-  const swapTargetRouter = (await deployContract('TestUniswapV3Router')) as TestUniswapV3Router
+  const swapTargetCallee = (await deployContract('TestPegasysV3Callee')) as TestPegasysV3Callee
+  const swapTargetRouter = (await deployContract('TestPegasysV3Router')) as TestPegasysV3Router
 
   return {
     token0,
@@ -69,8 +69,8 @@ export const poolFixture = async function (): Promise<PoolFixture> {
     swapTargetRouter,
     createPool: async (fee, tickSpacing, firstToken = token0, secondToken = token1) => {
       const mockTimePoolDeployer = (await deployContract(
-        'MockTimeUniswapV3PoolDeployer'
-      )) as MockTimeUniswapV3PoolDeployer
+        'MockTimePegasysV3PoolDeployer'
+      )) as MockTimePegasysV3PoolDeployer
       const tx = await mockTimePoolDeployer.deploy(
         factory.address,
         firstToken.address,
@@ -83,9 +83,9 @@ export const poolFixture = async function (): Promise<PoolFixture> {
       const poolAddress = receipt.events?.[2].args?.pool as string
       return new ethers.Contract(
         poolAddress,
-        MockTimeUniswapV3PoolArtifact.abi,
+        MockTimePegasysV3PoolArtifact.abi,
         getWallets()[0]
-      ) as MockTimeUniswapV3Pool
+      ) as MockTimePegasysV3Pool
     },
   }
 }

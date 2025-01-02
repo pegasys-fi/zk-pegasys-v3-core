@@ -4,21 +4,21 @@ pragma abicoder v2;
 import './Setup.sol';
 import '../../../../../contracts/test/TestERC20.sol';
 import '../../../../../contracts/libraries/TickMath.sol';
-import '../../../../../contracts/UniswapV3Pool.sol';
+import '../../../../../contracts/PegasysV3Pool.sol';
 
 // import 'hardhat/console.sol';
 
 contract E2E_swap {
     SetupTokens tokens;
-    SetupUniswap uniswap;
+    SetupPegasys pegasys;
 
-    UniswapV3Pool pool;
+    PegasysV3Pool pool;
 
     TestERC20 token0;
     TestERC20 token1;
 
-    UniswapMinter minter;
-    UniswapSwapper swapper;
+    PegasysMinter minter;
+    PegasysSwapper swapper;
 
     int24[] usedTicks;
     bool inited;
@@ -47,10 +47,10 @@ contract E2E_swap {
         token0 = tokens.token0();
         token1 = tokens.token1();
 
-        uniswap = new SetupUniswap(token0, token1);
+        pegasys = new SetupPegasys(token0, token1);
 
-        minter = new UniswapMinter(token0, token1);
-        swapper = new UniswapSwapper(token0, token1);
+        minter = new PegasysMinter(token0, token1);
+        swapper = new PegasysSwapper(token0, token1);
 
         tokens.mintTo(0, address(swapper), 1e9 ether);
         tokens.mintTo(1, address(swapper), 1e9 ether);
@@ -306,8 +306,8 @@ contract E2E_swap {
         //
         // deploy the pool
         //
-        uniswap.createPool(poolParams.fee, poolParams.startPrice);
-        pool = uniswap.pool();
+        pegasys.createPool(poolParams.fee, poolParams.startPrice);
+        pool = pegasys.pool();
 
         //
         // set the pool inside the minter and swapper contracts
@@ -360,7 +360,7 @@ contract E2E_swap {
         uint160 sqrtPriceLimitX96 = get_random_zeroForOne_priceLimit(_amount);
         // console.log('sqrtPriceLimitX96 = %s', sqrtPriceLimitX96);
 
-        (UniswapSwapper.SwapperStats memory bfre, UniswapSwapper.SwapperStats memory aftr) =
+        (PegasysSwapper.SwapperStats memory bfre, PegasysSwapper.SwapperStats memory aftr) =
             swapper.doSwap(true, _amountSpecified, sqrtPriceLimitX96);
 
         check_swap_invariants(
@@ -394,7 +394,7 @@ contract E2E_swap {
         uint160 sqrtPriceLimitX96 = get_random_oneForZero_priceLimit(_amount);
         // console.log('sqrtPriceLimitX96 = %s', sqrtPriceLimitX96);
 
-        (UniswapSwapper.SwapperStats memory bfre, UniswapSwapper.SwapperStats memory aftr) =
+        (PegasysSwapper.SwapperStats memory bfre, PegasysSwapper.SwapperStats memory aftr) =
             swapper.doSwap(false, _amountSpecified, sqrtPriceLimitX96);
 
         check_swap_invariants(
@@ -428,7 +428,7 @@ contract E2E_swap {
         uint160 sqrtPriceLimitX96 = get_random_zeroForOne_priceLimit(_amount);
         // console.log('sqrtPriceLimitX96 = %s', sqrtPriceLimitX96);
 
-        (UniswapSwapper.SwapperStats memory bfre, UniswapSwapper.SwapperStats memory aftr) =
+        (PegasysSwapper.SwapperStats memory bfre, PegasysSwapper.SwapperStats memory aftr) =
             swapper.doSwap(true, _amountSpecified, sqrtPriceLimitX96);
 
         check_swap_invariants(
@@ -462,7 +462,7 @@ contract E2E_swap {
         uint160 sqrtPriceLimitX96 = get_random_oneForZero_priceLimit(_amount);
         // console.log('sqrtPriceLimitX96 = %s', sqrtPriceLimitX96);
 
-        (UniswapSwapper.SwapperStats memory bfre, UniswapSwapper.SwapperStats memory aftr) =
+        (PegasysSwapper.SwapperStats memory bfre, PegasysSwapper.SwapperStats memory aftr) =
             swapper.doSwap(false, _amountSpecified, sqrtPriceLimitX96);
 
         check_swap_invariants(
